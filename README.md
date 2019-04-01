@@ -32,3 +32,9 @@ script, and write the new dataset path into the current_dataset field of conf.py
 3. Adjust the embedding network options in acoustic_word_embeddings/configs/conf.ini.
 4. Run the train scripts in acoustic_word_embeddings.
 5. Use the rs_new_data.py script to generate response detections for one or more sessions from a single patient.
+
+Run
+`python acoustic_word_embeddings/analysis/log_investigator.py RUNS_DIR`
+to print summaries of one or more training runs in a specific folder, and
+`python acoustic_word_embeddings/analysis/checkpoint_remover.py RUNS_DIR`
+to remove the checkpoints of all but the best three epochs for each run in this folder.

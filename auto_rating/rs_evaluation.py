@@ -32,6 +32,8 @@ def get_best_frame_with_rise(dists, max_dist_rise):
 def threshold_net_output(net_output_file, thresholds_immediate, thresholds_exhaustive,
                          max_dist_rise=0.001, min_frame_rise_len=None,
                          check_dists_for_end=True):
+    # XXX: for sliding window segmentation the two-stage thresholding idea does not really apply,
+    #  as there is only one potential detection at the end, and so only the higher threshold applies
     net_annotated_recordings: List[List[NetAnnotatedSegment]] = load_pickled(net_output_file)
 
     all_ratings = []

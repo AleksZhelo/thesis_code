@@ -10,7 +10,7 @@ import soundfile
 
 from acoustic_word_embeddings.core.args_util import parse_rate_new_data_args
 from auto_rating.rating_system import net_annotate_sliding_window_framewise
-from auto_rating.rs_evaluation import threshold_net_output_by_beta
+from auto_rating.rs_evaluation import threshold_net_output_by_beta, threshold_net_output
 from base.common import load_snodgrass_words
 from dataset_prep.snodgrass import SnodgrassWordRating
 
@@ -47,19 +47,22 @@ def gen_empty_ratings(folder):
     return fake_ratings
 
 
-def rate_snodgrass_folder(folder, run_dir, run_epoch, word2id_file):
+def rate_snodgrass_folder(folder, run_dir, run_epoch, word2id_file, threshold=None):
     fake_ratings = gen_empty_ratings(folder)
 
     annotations, beta = net_annotate_sliding_window_framewise(run_dir=run_dir, run_epoch=run_epoch,
                                                               ratings_file_or_object=fake_ratings,
                                                               skip_starting=0.3, save=False)
 
-    # could use different thresholding here via threshold_net_output and a specific value
-    thresholded_by_beta = threshold_net_output_by_beta(annotations, beta, word2id_file,
-                                                       max_dist_rise=0.001, min_frame_rise_len=None)
+    if threshold is None:
+        thresholded = threshold_net_output_by_beta(annotations, beta, word2id_file,
+                                                   max_dist_rise=0.001, min_frame_rise_len=None)
+    else:
+        thresholded = threshold_net_output(annotations, [threshold], [threshold],
+                                           max_dist_rise=0.001, min_frame_rise_len=None)
 
     output_ratings = []
-    for (start_sec, duration, dist, segment_idx, frames_before_rise), fake_rating in zip(thresholded_by_beta[0][3],
+    for (start_sec, duration, dist, segment_idx, frames_before_rise), fake_rating in zip(thresholded[0][3],
                                                                                          fake_ratings):
         output_ratings.append(
             SnodgrassWordRating(fake_rating.word, fake_rating.order, fake_rating.p_score, start_sec, duration,
@@ -86,11 +89,13 @@ def export_ratings_to_csv(file_path, ratings: List[SnodgrassWordRating], session
             csv_writer.writerow(row)
 
 
-def rate_patient_folder_for_multi_snodgrass(sessions_path, run_dir, run_epoch, word2id_file):
+def rate_patient_folder_for_multi_snodgrass(sessions_path, run_dir, run_epoch, word2id_file,
+                                            threshold=None):
     sessions = [os.path.join(sessions_path, x) for x in os.listdir(sessions_path) if
                 os.path.isdir(os.path.join(sessions_path, x))]
 
-    rated_sessions = [rate_snodgrass_folder(session, run_dir, run_epoch, word2id_file) for session in sessions]
+    rated_sessions = [rate_snodgrass_folder(session, run_dir, run_epoch, word2id_file, threshold)
+                      for session in sessions]
     # TODO: here we could refine the detected segments using VAD to remove excessive noise/silence at segment end,
     #  and reject segments containing only noise/silence. Since VAD needs a 32000 sampling rate, and works best for
     #  audio files somewhat cleaned from noise, doing this requires a lot of compute time. A simple implementation
@@ -121,7 +126,6 @@ def rate_patient_folder_for_multi_snodgrass(sessions_path, run_dir, run_epoch, w
 
 
 def __test_single(args):
-    # test_folder = '/home/aleks/work/BCI/data/nm_examples/2017-12-21_Soundfiles-Snodgrass_Koenig'
     test_folder = '/home/aleks/work/BCI/data/nm_examples/2017-02-23_Soundfiles-Snodgrass_mid_Eschbach'
     net_ratings = rate_snodgrass_folder(test_folder, args.run_dir, args.run_epoch, args.word2id_file)
     export_ratings_to_csv(os.path.join(test_folder, '11232_12323_results-snodgrass.csv'), net_ratings, 0, 1)
@@ -130,7 +134,13 @@ def __test_single(args):
 if __name__ == '__main__':
     args_ = parse_rate_new_data_args()
     # __test_single(args_)
-    rate_patient_folder_for_multi_snodgrass(args_.patient_dir, args_.run_dir, args_.run_epoch, args_.word2id_file)
+    rate_patient_folder_for_multi_snodgrass(args_.patient_dir, args_.run_dir,
+                                            args_.run_epoch, args_.word2id_file,
+                                            args_.threshold)
+
+    # XXX: the session dirs should follow a naming scheme like the following "2018-08-03-Soundfiles-Snodgrass_post_P10a"
+    #  session date first, separated by hyphens, VP code at the end, session id (pre/mid/post/other) second last,
+    #  separated by underscores
 
     # Example:
     # python rs_new_data.py

@@ -137,6 +137,12 @@ def parse_rate_new_data_args():
     _add_run_dir(parser)
     _add_run_epoch(parser)
     _add_word2id_file(parser)
+    parser.add_argument(
+        '--threshold',
+        type=float,
+        required=False,
+        help='An explicit threshold to use instead of the default beta-based thresholding'
+    )
 
     return parser.parse_args()
 

@@ -9,7 +9,7 @@ awe_runs_dir = '/home/aleks/projects/thesis/acoustic_word_embeddings/runs'
 # the final patient + healthy dataset
 current_dataset = 'all_snodgrass_cleaned_v5'
 
-# the clean dataset
+# the clean dataset (used in section 4.3.4 of the thesis)
 # current_dataset = 'independent_cleaned_v3'
 
 # a dataset with previously unseen words, not used anymore

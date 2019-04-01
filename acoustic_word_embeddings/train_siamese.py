@@ -110,9 +110,9 @@ def __main():
         net = SiameseGRU(logger, config, batch_first=batch_first, loss=loss_fn)
 
     if args.load_weights is not None:
+        # exclude_params specifies the layers to drop when applying pre-trained weights
         net.restore_weights(args.load_weights, exclude_params=['fc.2'], freeze_except=None)
         # net.restore_weights(args.load_weights, exclude_params=[], freeze_except=None)
-        # net.restore_weights(args.load_weights, exclude_params=[], freeze_except=None, strict=False)
     net.train(True)
 
     if args.gpu_count > 1:
