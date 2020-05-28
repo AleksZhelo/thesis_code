@@ -1,7 +1,33 @@
 # Thesis
 
-Development of a machine learning solution for automated speech quality
-analysis of clinical language test data.
+Development of a machine learning solution for automated response detection and localization for a clinical picture naming test.
+
+# Description
+
+This repository contains the complete source code of a keyword spotting system developed as part of my Master's thesis.
+The aim of the project was to provide a simple solution which is able of finding occurrences of specific German words in recordings
+of aphasic patient's verbal answers to picture prompts and can work efficiently on low-capability hardware (like a laptop). 
+
+The developed approach uses a Siamese-like recurrent neural network to produce fixed-size embeddings 
+of variable-length speech segments (representing spoken words) trained in such a way that same-word segments are close in the embedding space.
+The embedding network is then used on novel audio to find segments best corresponding to expected picture names, accepting the 
+matches based on a predefined distance threshold. 
+
+<p align="center">
+    <img src='validation_words.png' alt='clusters of words from the validation dataset'/>
+</p>
+A t-SNE projection of embeddings of several word segments from the validation dataset (previously unseen by the network), 
+each point represents a different spoken example of the specified word.  We can see that word clusters are fairly well separated, 
+and similarly sounding words tend to be closer to each other in the embedding space than to other word examples 
+(Schraubenzieher and Schraubenschlüssel are close, but separable, while the network fails to distinguish between Kerze and Katze).  
+
+<p align="center">
+    <img src='new_words.png' alt='clusters of previously unseen word categories'/>
+</p>
+A t-SNE projection of embeddings of examples of completely new word categories shows that the network can generalize 
+to previously unseen vocabulary.
+
+For more details please refer to the [thesis pdf](Master's_thesis_Zhelo.pdf).
 
 # Requirements
 
