@@ -17,8 +17,9 @@ matches based on a predefined distance threshold.
     <img src='validation_words.png' alt='clusters of words from the validation dataset'/>
 </p>
 A t-SNE projection of embeddings of several word segments from the validation dataset (previously unseen by the network), 
-each point represents a different spoken example of the specified word.  We can see that word clusters are fairly well separated, 
-and similarly sounding words tend to be closer to each other in the embedding space than to other word examples 
+each point represents a different spoken example of the specified word.  
+
+We can see that word clusters are fairly well separated, and similarly sounding words tend to be closer to each other in the embedding space than to other word examples 
 (Schraubenzieher and Schraubenschlüssel are close, but separable, while the network fails to distinguish between Kerze and Katze).  
 
 <p align="center">
@@ -26,7 +27,8 @@ and similarly sounding words tend to be closer to each other in the embedding sp
 </p>
 A t-SNE projection of embeddings of examples of completely new word categories shows that the network can generalize 
 to previously unseen vocabulary.
-
+ 
+<br/>
 For more details please refer to the [thesis pdf](Master's_thesis_Zhelo.pdf).
 
 # Requirements
