@@ -9,7 +9,7 @@ The aim of the project was to provide a simple solution which is capable of find
 of aphasic patient's verbal answers to picture prompts and can work efficiently on low-capability hardware (like a laptop). 
 
 The developed approach uses a Siamese-like recurrent neural network to produce fixed-size embeddings 
-of variable-length speech segments (representing spoken words) trained in such a way that same-word segments are close in the embedding space.
+of variable-length speech segments (representing spoken words), trained in such a way that same-word segments are close in the embedding space.
 The embedding network is then used on novel audio to find segments best corresponding to expected picture names, accepting the 
 matches based on a predefined distance threshold. 
 
