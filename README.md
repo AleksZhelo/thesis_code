@@ -5,7 +5,7 @@ Development of a machine learning solution for automated response detection and 
 # Description
 
 This repository contains the complete source code of a keyword spotting system developed as part of my Master's thesis.
-The aim of the project was to provide a simple solution which is able of finding occurrences of specific German words in recordings
+The aim of the project was to provide a simple solution which is capable of finding occurrences of specific German words in recordings
 of aphasic patient's verbal answers to picture prompts and can work efficiently on low-capability hardware (like a laptop). 
 
 The developed approach uses a Siamese-like recurrent neural network to produce fixed-size embeddings 
