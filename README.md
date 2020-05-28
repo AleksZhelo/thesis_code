@@ -28,7 +28,7 @@ We can see that word clusters are fairly well separated, and similarly sounding 
 A t-SNE projection of embeddings of examples of completely new word categories shows that the network can generalize 
 to previously unseen vocabulary.
   
-<br> <br/>
+<br>
 
 For more details please refer to the [thesis pdf](Master's_thesis_Zhelo.pdf).
 
