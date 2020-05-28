@@ -1,7 +1,6 @@
-import configparser
 import ast
+import configparser
 import os
-
 from typing import Any
 
 

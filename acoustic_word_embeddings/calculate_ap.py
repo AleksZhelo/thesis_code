@@ -2,9 +2,9 @@ import sys
 
 import numpy as np
 
+from acoustic_word_embeddings.core.args_util import parse_load_epoch_args
 from acoustic_word_embeddings.core.average_precision import average_precision
 from acoustic_word_embeddings.core.net_util import load_net
-from acoustic_word_embeddings.core.args_util import parse_load_epoch_args
 from acoustic_word_embeddings.gen_embeddings import get_siamese_embeddings, get_classifier_embeddings
 from base.common import get_dataset_paths
 from base.dataset import KaldiDataset

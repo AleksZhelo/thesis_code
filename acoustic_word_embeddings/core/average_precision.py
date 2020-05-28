@@ -1,7 +1,6 @@
+import numpy as np
 from scipy.misc import comb
 from scipy.spatial.distance import pdist
-
-import numpy as np
 
 
 def test_chance_level(labels):

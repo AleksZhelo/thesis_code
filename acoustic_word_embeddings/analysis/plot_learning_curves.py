@@ -1,7 +1,8 @@
 import argparse
 import os
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import rc
 
 from acoustic_word_embeddings.analysis.log_reader import ClassifierLogReader, SiameseLogReader

@@ -1,8 +1,7 @@
 import torch
-
-from base.settings import Settings
 import torch.nn as nn
 
+from base.settings import Settings
 from base.torch.common import hidden2fc_input
 from base.torch.gru_fc_base import GRU_FC_base
 

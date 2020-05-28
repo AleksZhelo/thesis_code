@@ -2,7 +2,6 @@ import csv
 import glob
 import os
 from collections import namedtuple
-from functools import partial
 from pprint import pprint
 
 import kaldi_io
@@ -10,10 +9,10 @@ import numpy as np
 import soundfile
 
 from base import util
+from base.sound_util import time2sample
 from conf import snodgrass_data_dir, processed_data_dir
 from dataset_prep.core.cleaning import reject_by_frame_count_snodgrass
 from dataset_prep.core.common import fix_scp_encoding
-from base.sound_util import time2sample
 from dataset_prep.core.features import audio2lmfe
 
 SnodgrassWordRating = namedtuple('SnodgrassWordRating',

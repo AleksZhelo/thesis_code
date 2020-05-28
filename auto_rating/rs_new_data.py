@@ -2,10 +2,9 @@ import csv
 import datetime
 import glob
 import os
-
-import numpy as np
 from typing import List
 
+import numpy as np
 import soundfile
 
 from acoustic_word_embeddings.core.args_util import parse_rate_new_data_args

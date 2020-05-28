@@ -1,9 +1,9 @@
 import torch
+import torch.nn as nn
 
 from base.settings import Settings
 from base.torch.common import hidden2fc_input
 from base.torch.lstm_fc_base import LSTM_FC_base
-import torch.nn as nn
 
 
 class LSTMClassifier(LSTM_FC_base):

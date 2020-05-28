@@ -1,7 +1,4 @@
-import resampy
-import soundfile
 from cachetools import LRUCache
-import scipy.io.wavfile as wav
 
 from base import sound_util
 

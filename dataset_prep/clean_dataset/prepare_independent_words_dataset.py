@@ -5,9 +5,8 @@ from collections import Counter
 import numpy as np
 
 from base.common import get_dataset_paths, key2word
-from base.dataset import KaldiDataset
 from base.util import load_pickled
-from conf import current_dataset, processed_data_dir
+from conf import processed_data_dir
 from dataset_prep.clean_dataset.collect_independent_words import get_dataset_word_counts
 
 

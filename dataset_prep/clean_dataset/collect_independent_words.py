@@ -3,7 +3,6 @@ import pickle
 import random
 from collections import Counter
 from functools import partial
-from pprint import pprint
 
 from rpy2 import robjects
 from rpy2.robjects import pandas2ri
@@ -11,10 +10,9 @@ from rpy2.robjects import pandas2ri
 from base.common import load_snodgrass_words, get_dataset_paths
 from base.dataset import KaldiDataset
 from base.util import load_pickled, collapse_nested_dict
-from conf import raw_data_dir, current_dataset
-from dataset_prep.SWC import aligned_words_file, collect_aligned_words, collect_swc_features
+from conf import raw_data_dir
+from dataset_prep.SWC import aligned_words_file, collect_aligned_words
 from dataset_prep.core.common import exclude_words, filter_words_dict
-from dataset_prep.emuDB import collect_emu_features
 
 
 def emu2word_counts(emu_name, emu_dir, seq_rds_path, word_filter, verbose=False):

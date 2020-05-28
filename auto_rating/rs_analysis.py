@@ -1,25 +1,23 @@
-import glob
-import math
 import os
-import pickle
-import string
 from typing import List
 
-import numpy as np
+import os
+from typing import List
+
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import soundfile
+from scipy import stats
 from scipy.stats import pearsonr
 from sklearn import metrics
-from scipy import stats
 
 # noinspection PyUnresolvedReferences
 from auto_rating.rs_evaluation import net_ratings_stats, threshold_net_output, evaluate_net_ratings_list, \
     threshold_net_output_by_beta, get_best_frame_with_rise
-from base.common import response_missing, response_with_synonym
-from auto_rating.rating_system import NetAnnotatedSegment
 from base import util, sound_util
-from base.sound_util import time2sample, time2frames
+from base.common import response_missing, response_with_synonym
+from base.sound_util import time2sample
 from base.util import overlap, load_pickled
 from conf import processed_data_dir
 from dataset_prep.snodgrass import SnodgrassWordRating

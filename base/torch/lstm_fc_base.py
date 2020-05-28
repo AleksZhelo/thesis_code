@@ -1,11 +1,11 @@
 from abc import ABC
 
 import torch
-
-from base.torch.common import hidden2fc_input
-from base.settings import Settings
-from base.torch.model import Model
 import torch.nn as nn
+
+from base.settings import Settings
+from base.torch.common import hidden2fc_input
+from base.torch.model import Model
 
 
 # noinspection PyPep8Naming

@@ -5,12 +5,12 @@ import sys
 import numpy as np
 import torch
 
+from acoustic_word_embeddings.core.args_util import parse_gen_args
 from acoustic_word_embeddings.core.common import embeddings_dir2dict
 from acoustic_word_embeddings.core.net_util import load_net
-from acoustic_word_embeddings.core.args_util import parse_gen_args
+from base import util
 from base.common import get_dataset_paths
 from base.dataset import KaldiDataset
-from base import util
 from base.torch.common import torch_load_unwrapped
 from conf import current_dataset, new_path, processed_data_dir
 

@@ -6,12 +6,12 @@ import numpy as np
 import torch
 
 from acoustic_word_embeddings.core.average_precision import average_precision
-from acoustic_word_embeddings.core.net_util import setup_training_run, create_embedding_loss
 from acoustic_word_embeddings.core.embedding_loss import margin_loss
+from acoustic_word_embeddings.core.net_util import setup_training_run, create_embedding_loss
 from acoustic_word_embeddings.nets.siamese_gru import SiameseGRU
+from acoustic_word_embeddings.nets.siamese_lstm import SiameseLSTM
 from base.common import get_dataset_paths
 from base.dataset import KaldiDataset
-from acoustic_word_embeddings.nets.siamese_lstm import SiameseLSTM
 from conf import current_dataset
 
 

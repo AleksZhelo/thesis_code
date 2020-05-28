@@ -1,8 +1,8 @@
 import enum
+from typing import Optional
 
 import torch
 from torch.nn.utils.rnn import PackedSequence, pad_packed_sequence
-from typing import Optional
 
 from acoustic_word_embeddings.core.decov_reg_loss import decov_2d, decov_3d
 from base.torch.experimental.augmented_gru import AugmentedGRU

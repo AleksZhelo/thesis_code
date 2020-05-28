@@ -2,7 +2,6 @@ import math
 
 import numpy as np
 import speechpy
-
 from python_speech_features import logfbank, delta, mfcc
 
 

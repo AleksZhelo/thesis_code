@@ -8,9 +8,9 @@ import numpy as np
 import torch
 from scipy.spatial.distance import cdist
 
+from acoustic_word_embeddings.core.args_util import parse_auto_rating_args
 from acoustic_word_embeddings.core.common import load_embeddings
 from acoustic_word_embeddings.core.net_util import load_net
-from acoustic_word_embeddings.core.args_util import parse_auto_rating_args
 from acoustic_word_embeddings.gen_embeddings import get_or_generate_embeddings
 from auto_rating.vad.segmentation import segment_generator, plain_audio_generator
 from base import util

@@ -5,13 +5,13 @@ import time
 from collections import Counter
 from itertools import islice, cycle
 
-import numpy as np
 import kaldi_io
+import numpy as np
 
 from base import util
+from base.common import key2word, key2dataset, get_dataset_paths, snodgrass_key2date, snodgrass_key2patient
 from base.sound_util import frames2time
 from conf import processed_data_dir, current_dataset
-from base.common import key2word, key2dataset, get_dataset_paths, snodgrass_key2date, snodgrass_key2patient
 
 
 class KaldiDataset(object):

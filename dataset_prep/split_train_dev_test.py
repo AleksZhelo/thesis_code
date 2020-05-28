@@ -1,8 +1,8 @@
 import glob
 import os
+from collections import Counter
 
 import numpy as np
-from collections import Counter
 
 from base.common import get_dataset_paths, key2word, key2dataset, snodgrass_key2patient
 from base.dataset import KaldiDataset

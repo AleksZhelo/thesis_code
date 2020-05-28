@@ -1,11 +1,8 @@
 import os
 from collections import namedtuple, Counter
 
-from typing import List
-
 import numpy as np
 
-from auto_rating.rating_system import NetAnnotatedSegment
 from auto_rating.rs_evaluation import threshold_net_output_by_beta
 from base.common import response_missing, response_with_synonym
 from base.util import load_pickled

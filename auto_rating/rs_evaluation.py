@@ -1,4 +1,3 @@
-import math
 import pickle
 from collections import namedtuple
 from typing import List

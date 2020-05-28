@@ -1,6 +1,5 @@
 import os
 from itertools import islice, cycle
-
 from typing import List, Dict
 
 import numpy as np

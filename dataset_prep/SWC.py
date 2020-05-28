@@ -1,24 +1,22 @@
 import glob
 import os
+import pickle
+from collections import OrderedDict
 from functools import partial
 
 import kaldi_io
 import lxml.etree as etree
-import pickle
-
-from collections import OrderedDict
-
 import numpy as np
 import soundfile
 
 from base import util
 from base.common import load_snodgrass_words
+from base.sound_util import time2sample
 from base.util import print_progress_bar
-from conf import raw_data_dir, processed_data_dir, res_dir
+from conf import raw_data_dir, processed_data_dir
 from dataset_prep.core.cleaning import reject_by_duration_sec, reject_by_frame_count
 from dataset_prep.core.common import select_words, fix_scp_encoding, filter_words_dict
-from base.sound_util import time2sample
-from dataset_prep.core.features import audio2lmfe, audio2mfcc, audio2lmfe_reverse
+from dataset_prep.core.features import audio2lmfe
 
 corpus_dir = os.path.join(raw_data_dir, 'SWC_German')
 aligned_words_file = os.path.join(corpus_dir, 'aligned_words.pkl')

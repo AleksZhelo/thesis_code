@@ -1,6 +1,7 @@
+from typing import Optional
+
 import numpy as np
 import torch
-from typing import Optional
 
 from base.torch.common import get_dropout_mask
 
