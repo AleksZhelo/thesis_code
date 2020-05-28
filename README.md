@@ -23,6 +23,19 @@ Set up access to kaldi_io.py as suggested in
 ## [WebRTC VAD](https://github.com/wiseman/py-webrtcvad)
 Not strictly required for the final pipeline, but could be used to improve the detected keyword segments.
 
+## Miscellaneous
+* NumPy 
+* SciPy 
+* scikit-learn 
+* pandas
+* Matplotlib
+* rpy2 
+* soundfile
+* resampy
+* lxml
+* cachetools
+* speechpy
+
 # Workflow
 
 1. Set the data paths in conf.py.
