@@ -1,6 +1,6 @@
 import torch
 
-from acoustic_word_embeddings.core.sampling import sample_distance_weighted
+from acoustic_word_embeddings.core.util.sampling import sample_distance_weighted
 
 
 # TODO: should have been decoupled from the sampling process, removing distance_weighted_sampling param and leaving that

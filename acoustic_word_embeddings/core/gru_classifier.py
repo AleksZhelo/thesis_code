@@ -2,24 +2,24 @@ import torch
 import torch.nn as nn
 
 from base.settings import Settings
-from base.torch.common import hidden2fc_input
-from base.torch.lstm_fc_base import LSTM_FC_base
+from acoustic_word_embeddings.nets.common import hidden2fc_input
+from base.torch import GRU_FC_base
 
 
-class LSTMClassifier(LSTM_FC_base):
+class GRUClassifier(GRU_FC_base):
 
     def __init__(self, logger, config, batch_first=False):
-        super(LSTMClassifier, self).__init__(logger, config, batch_first)
+        super(GRUClassifier, self).__init__(logger, config, batch_first)
 
     def _create_arch(self, settings):
-        super(LSTMClassifier, self)._create_arch(settings)
+        super(GRUClassifier, self)._create_arch(settings)
         self.fc.append(nn.LogSoftmax(dim=1))
         self.nll_loss = nn.CrossEntropyLoss()
 
     def embedding(self, x):
-        _, (h, _) = self.lstm(x)  # hidden state defaults to zero
+        _, h = self.gru(x)  # hidden state defaults to zero
 
-        x = hidden2fc_input(self.lstm, h)
+        x = hidden2fc_input(self.gru, h)
         for fc in self.fc[:-1]:
             x = fc(x)
 
@@ -38,6 +38,6 @@ class LSTMClassifier(LSTM_FC_base):
 
 if __name__ == '__main__':
     sett = Settings('configs/conf.ini', None)
-    model = LSTMClassifier(None, sett)
+    model = GRUClassifier(None, sett)
     print(model.children())
     print()

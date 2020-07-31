@@ -4,8 +4,8 @@ from typing import Optional
 import torch
 from torch.nn.utils.rnn import PackedSequence, pad_packed_sequence
 
-from acoustic_word_embeddings.core.decov_reg_loss import decov_2d, decov_3d
-from base.torch.experimental.augmented_gru import AugmentedGRU
+from acoustic_word_embeddings.core.loss.decov_reg_loss import decov_2d, decov_3d
+from acoustic_word_embeddings.nets.modules_experimental.augmented_gru import AugmentedGRU
 
 
 class BiRNNMode(enum.Enum):

@@ -4,9 +4,9 @@ import torch
 import torch.nn as nn
 
 from base.settings import Settings
-from base.torch.common import hidden2fc_input
-from base.torch.experimental.custom_gru import CustomGRU, BiRNNMode
-from base.torch.model import Model
+from acoustic_word_embeddings.nets.common import hidden2fc_input
+from acoustic_word_embeddings.nets.modules_experimental.custom_gru import CustomGRU, BiRNNMode
+from acoustic_word_embeddings.nets.model import Model
 
 
 # noinspection PyPep8Naming

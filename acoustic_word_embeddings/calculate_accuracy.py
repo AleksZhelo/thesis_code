@@ -1,9 +1,9 @@
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 
-from acoustic_word_embeddings.core.common import load_embeddings
-from acoustic_word_embeddings.core.embedding_loss import loss_name2class
-from acoustic_word_embeddings.core.net_util import read_embedding_loss, load_net
+from acoustic_word_embeddings.core.util.common import load_embeddings
+from acoustic_word_embeddings.core.loss.embedding_loss import loss_name2class
+from acoustic_word_embeddings.core.util.net_util import read_embedding_loss, load_net
 from acoustic_word_embeddings.gen_embeddings import get_or_generate_embeddings
 from acoustic_word_embeddings.train_classifier import process_classifier_epoch
 from base.common import get_dataset_paths

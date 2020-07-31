@@ -7,7 +7,7 @@ from typing import List
 import numpy as np
 import soundfile
 
-from acoustic_word_embeddings.core.args_util import parse_rate_new_data_args
+from acoustic_word_embeddings.core.util.args_util import parse_rate_new_data_args
 from auto_rating.rating_system import net_annotate_sliding_window_framewise
 from auto_rating.rs_evaluation import threshold_net_output_by_beta, threshold_net_output
 from base.common import load_snodgrass_words

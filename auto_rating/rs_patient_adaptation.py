@@ -4,8 +4,8 @@ from typing import List, Dict
 
 import numpy as np
 
-from acoustic_word_embeddings.core.args_util import parse_patient_adaptation_test_args
-from acoustic_word_embeddings.core.common import load_embeddings
+from acoustic_word_embeddings.core.util.args_util import parse_patient_adaptation_test_args
+from acoustic_word_embeddings.core.util.common import load_embeddings
 from acoustic_word_embeddings.gen_embeddings import get_or_generate_embeddings
 from auto_rating.rating_system import net_annotate_sliding_window_framewise
 from base import util

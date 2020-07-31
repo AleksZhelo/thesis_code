@@ -3,7 +3,7 @@ import os
 
 from acoustic_word_embeddings.analysis.log_investigator import find_run_dirs
 from acoustic_word_embeddings.analysis.log_reader import SiameseLogReader, ClassifierLogReader
-from acoustic_word_embeddings.core.net_util import checkpoint_dir2dict
+from acoustic_word_embeddings.core.util.net_util import checkpoint_dir2dict
 
 
 def remove_checkpoints_single(folder, keep_top=3):

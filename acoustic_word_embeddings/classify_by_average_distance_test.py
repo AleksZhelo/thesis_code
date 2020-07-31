@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.spatial.distance import cdist
 
-from acoustic_word_embeddings.core.common import load_embeddings
+from acoustic_word_embeddings.core.util.common import load_embeddings
 from acoustic_word_embeddings.gen_embeddings import get_or_generate_embeddings
 
 

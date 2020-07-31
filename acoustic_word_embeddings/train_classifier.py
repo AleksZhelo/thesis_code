@@ -4,9 +4,9 @@ import time
 import numpy as np
 import torch
 
-from acoustic_word_embeddings.core.net_util import setup_training_run
-from acoustic_word_embeddings.nets.gru_classifier import GRUClassifier
-from acoustic_word_embeddings.nets.lstm_classifier import LSTMClassifier
+from acoustic_word_embeddings.core.util.net_util import setup_training_run
+from acoustic_word_embeddings.core.gru_classifier import GRUClassifier
+from acoustic_word_embeddings.core.lstm_classifier import LSTMClassifier
 from base.common import get_dataset_paths
 from base.dataset import KaldiDataset
 from conf import current_dataset

@@ -3,7 +3,7 @@ from typing import Optional
 import numpy as np
 import torch
 
-from base.torch.common import get_dropout_mask
+from acoustic_word_embeddings.nets.common import get_dropout_mask
 
 
 class AugmentedGRU(torch.nn.Module):
