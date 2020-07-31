@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from base.settings import Settings
 from acoustic_word_embeddings.nets.common import hidden2fc_input
-from base.torch import GRU_FC_base
+from acoustic_word_embeddings.nets.gru_fc_base import GRU_FC_base
 
 
 class GRUClassifier(GRU_FC_base):
