@@ -350,8 +350,8 @@ class KaldiDataset(object):
         std_file = '{0}_std'.format(scp_no_ext)
         word2id_file = '{0}_word2id'.format(scp_no_ext)
 
-        self.mean = np.load(mean_file)
-        self.std = np.load(std_file)
+        self.mean = np.load(mean_file, allow_pickle=True)
+        self.std = np.load(std_file, allow_pickle=True)
         with open(word2id_file, 'rb') as f:
             self.word2id = pickle.load(f)
 
@@ -427,7 +427,7 @@ def __main_independent_test():
 
 
 if __name__ == '__main__':
-    # __main()
+    __main()
     # __main_snodgrass_test()
     # __main_external_test()
-    __main_independent_test()
+    # __main_independent_test()

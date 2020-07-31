@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.misc import comb
+from scipy.special import comb
 from scipy.spatial.distance import pdist
 
 
