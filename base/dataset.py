@@ -1,25 +1,21 @@
+import abc
 import os
 import pickle
 import sys
-import time
-from collections import Counter
 from itertools import islice, cycle
 
-import kaldi_io
 import numpy as np
 
 from base import util
-from base.common import key2word, key2dataset, get_dataset_paths, snodgrass_key2date, snodgrass_key2patient
-from base.sound_util import frames2time
-from conf import processed_data_dir, current_dataset
+from base.common import key2word, key2dataset
 
 
-class KaldiDataset(object):
+class Dataset(metaclass=abc.ABCMeta):
 
-    def __init__(self, scp_path, parent_scp_path=None, training=True, logger=None, variance_normalization=False,
+    def __init__(self, data_path, parent_dataset_path=None, training=True, logger=None, variance_normalization=False,
                  noise_multiplier=0, noise_prob=1, mean_subtraction=False, supplement_rare_with_noisy=False,
                  supplement_seed=112):
-        self.scp_path = scp_path if not scp_path.startswith('scp:') else scp_path[4:]
+        self.data_path = data_path if not data_path.startswith('scp:') else data_path[4:]
         self.word2idxs = {}
         self.idx2word = []
         self.idx2source_dataset = []
@@ -29,14 +25,14 @@ class KaldiDataset(object):
         self.noise_multiplier = noise_multiplier
         self.noise_prob = noise_prob
 
-        util.warn_or_print(logger, 'Loading {0}, train = {1}'.format(scp_path, training))
-        if not training and parent_scp_path is None:
-            util.warn_or_print(logger, 'Non-training mode is selected, but parent_scp_path is None')
+        util.warn_or_print(logger, 'Loading {0}, train = {1}'.format(data_path, training))
+        if not training and parent_dataset_path is None:
+            util.warn_or_print(logger, 'Non-training mode is selected, but parent_dataset_path is None')
             util.warn_or_print(logger, 'A non-training dataset must always have the parent specified, otherwise'
                                        'the data mean and other derived values will be incorrect. Aborting.')
             sys.exit(-1)
 
-        for i, (key, mat) in enumerate(kaldi_io.read_mat_scp(scp_path)):
+        for i, (key, mat) in enumerate(self._raw_data_iterator()):
             word = key2word(key)
             dataset = key2dataset(key)
 
@@ -55,11 +51,11 @@ class KaldiDataset(object):
             self.word2idxs[key] = np.array(self.word2idxs[key])
         self.counts = {key: self.word2idxs[key].shape[0] for key in self.word2idxs}
 
-        if parent_scp_path is None:
+        if parent_dataset_path is None:
             self.mean = self._calculate_feature_mean()
             self.std = self._calculate_feature_std()
         else:
-            self.load_derived_data(parent_scp_path)
+            self.load_derived_data(parent_dataset_path)
 
         if mean_subtraction:
             util.warn_or_print(logger, 'Applying mean subtraction')
@@ -115,7 +111,7 @@ class KaldiDataset(object):
 
         # classifier training setup
         self.all_words = np.array(sorted(list(self.counts.keys())))
-        if parent_scp_path is None:
+        if parent_dataset_path is None:
             self.word2id = {key: i for i, key in enumerate(self.all_words)}
         else:
             new_words = np.array([x not in self.word2id for x in self.all_words])
@@ -287,7 +283,7 @@ class KaldiDataset(object):
                 yield self.zero_padded_data(np.arange(batch_start, min(batch_start + batch_size, self.data.shape[0])),
                                             batch_first=batch_first)
 
-    # TODO: decouple sampler from dataset?
+    # TODO: decouple sampler from dataset? | yes, definitely, and make augmentations easier configurable and extendable
     def siamese_margin_loss_epoch(self, batch_size, examples_per_word, batch_first=False, augment_parts=False):
         n_words = batch_size // examples_per_word
 
@@ -334,18 +330,18 @@ class KaldiDataset(object):
                                             batch_first=batch_first)
 
     def dump_derived_data(self):
-        scp_no_ext = os.path.splitext(self.scp_path)[0]
-        dump_mean_to = '{0}_mean'.format(scp_no_ext)
-        dump_std_to = '{0}_std'.format(scp_no_ext)
-        dump_word2id_to = '{0}_word2id'.format(scp_no_ext)
+        data_path_no_ext = os.path.splitext(self.data_path)[0]
+        dump_mean_to = '{0}_mean'.format(data_path_no_ext)
+        dump_std_to = '{0}_std'.format(data_path_no_ext)
+        dump_word2id_to = '{0}_word2id'.format(data_path_no_ext)
 
         self.mean.dump(dump_mean_to)
         self.std.dump(dump_std_to)
         with open(dump_word2id_to, 'wb') as f:
             pickle.dump(self.word2id, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-    def load_derived_data(self, source_scp_path):
-        scp_no_ext = os.path.splitext(source_scp_path)[0]
+    def load_derived_data(self, source_data_path):
+        scp_no_ext = os.path.splitext(source_data_path)[0]
         mean_file = '{0}_mean'.format(scp_no_ext)
         std_file = '{0}_std'.format(scp_no_ext)
         word2id_file = '{0}_word2id'.format(scp_no_ext)
@@ -355,79 +351,7 @@ class KaldiDataset(object):
         with open(word2id_file, 'rb') as f:
             self.word2id = pickle.load(f)
 
-
-def _print_patients(data_train, data_dev, data_test):
-    from base.common import snodgrass_key2patient
-    for ds in [data_train, data_dev, data_test]:
-        patients = np.unique([snodgrass_key2patient(ds.idx2key[i]) for i in range(ds.data.shape[0]) if
-                              ds.idx2source_dataset[i] == 'snodgrass'])
-        print(patients)
-
-
-def __main():
-    start = time.time()
-
-    train_path, dev_path, test_path = get_dataset_paths(current_dataset)
-    data_train = KaldiDataset('scp:' + train_path, noise_multiplier=1.0, noise_prob=0.5,
-                              supplement_rare_with_noisy=False,
-                              supplement_seed=112)
-    data_dev = KaldiDataset('scp:' + dev_path, parent_scp_path=train_path, training=False)
-    data_test = KaldiDataset('scp:' + test_path, parent_scp_path=train_path, training=False)
-
-    _print_patients(data_train, data_dev, data_test)
-
-    test = next(data_train.siamese_triplet_epoch(32, augment_parts=True))
-    test = next(data_train.siamese_margin_loss_epoch(50, 5))
-
-    print('scp: {0}'.format(time.time() - start))
-
-
-def __main_snodgrass_test():
-    snodgrass_path = '/home/aleks/data/speech_processed/snodgrass_words_cleaned_v3/snodgrass_data_v3.scp'
-    data_snodgrass = KaldiDataset('scp:' + snodgrass_path)
-
-    patients = np.unique([snodgrass_key2patient(x) for x in data_snodgrass.idx2key])
-    sessions = np.unique([snodgrass_key2date(x) for x in data_snodgrass.idx2key])
-    print(patients)
-    print(sessions)
-    print(data_snodgrass.data.shape)
-
-    total_seconds_of_data = np.sum(frames2time(x.shape[0]) for x in data_snodgrass.data)
-    print('Hours of data: {0:.3f}'.format(total_seconds_of_data / 60 / 60))
-
-
-def __main_external_test():
-    external_path = os.path.join(processed_data_dir, 'external_snodgrass_words.scp')
-    data_external = KaldiDataset('scp:' + external_path)
-
-    total_seconds_of_data = np.sum(frames2time(x.shape[0]) for x in data_external.data)
-    print('Hours of data: {0:.3f}'.format(total_seconds_of_data / 60 / 60))
-
-
-def __main_independent_test():
-    swc_path = '/home/aleks/data/speech_processed/independent_test_v2/SWC_independent_test.scp'
-    data_swc = KaldiDataset('scp:' + swc_path)
-
-    print(data_swc.counts)
-
-    train_path, dev_path, test_path = get_dataset_paths('independent_cleaned_v3')
-    data_train = KaldiDataset('scp:' + train_path)
-    data_dev = KaldiDataset('scp:' + dev_path, parent_scp_path=train_path)
-    data_test = KaldiDataset('scp:' + test_path, parent_scp_path=train_path)
-
-    print(data_dev.counts)
-
-    swc_keys = set(data_swc.idx2key)
-    dev_keys = set(data_dev.idx2key)
-    difference = swc_keys.difference(dev_keys)
-
-    left_words = np.array([key2word(x) for x in difference])
-    left_counts = Counter(left_words)
-    print(left_counts)
-
-
-if __name__ == '__main__':
-    __main()
-    # __main_snodgrass_test()
-    # __main_external_test()
-    # __main_independent_test()
+    @abc.abstractmethod
+    def _raw_data_iterator(self):
+        """Must produce (key, features) pairs."""
+        return

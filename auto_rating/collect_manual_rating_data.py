@@ -10,7 +10,7 @@ import soundfile
 
 from base import util
 from base.common import snodgrass_key2patient, snodgrass_key2all, response_missing
-from base.dataset import KaldiDataset
+from base.kaldi_dataset import KaldiDataset
 from conf import snodgrass_data_dir, processed_data_dir
 from dataset_prep.snodgrass import snodgrass_iter, get_word_rating, SnodgrassWordRating
 

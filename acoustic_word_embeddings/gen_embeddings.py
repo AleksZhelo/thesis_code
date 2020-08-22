@@ -10,7 +10,7 @@ from acoustic_word_embeddings.core.util.common import embeddings_dir2dict
 from acoustic_word_embeddings.core.util.net_util import load_net
 from base import util
 from base.common import get_dataset_paths
-from base.dataset import KaldiDataset
+from base.kaldi_dataset import KaldiDataset
 from acoustic_word_embeddings.nets.common import torch_load_unwrapped
 from conf import current_dataset, new_path, processed_data_dir
 
@@ -100,20 +100,20 @@ def generate_embeddings(run_dir, dataset=None, gen_train=False, gen_dev=False, g
     train_path, dev_path, test_path = get_dataset_paths(dataset)
 
     if gen_train:
-        data_train = KaldiDataset('scp:' + train_path, parent_scp_path=train_scp, training=False, logger=None,
+        data_train = KaldiDataset('scp:' + train_path, parent_dataset_path=train_scp, training=False, logger=None,
                                   mean_subtraction=mean_sub, variance_normalization=var_norm)
     if gen_dev:
-        data_dev = KaldiDataset('scp:' + dev_path, parent_scp_path=train_scp, training=False, logger=None,
+        data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_scp, training=False, logger=None,
                                 mean_subtraction=mean_sub, variance_normalization=var_norm)
     if gen_test:
-        data_test = KaldiDataset('scp:' + test_path, parent_scp_path=train_scp, training=False, logger=None,
+        data_test = KaldiDataset('scp:' + test_path, parent_dataset_path=train_scp, training=False, logger=None,
                                  mean_subtraction=mean_sub, variance_normalization=var_norm)
     if gen_new:
-        data_new = KaldiDataset('scp:' + new_path, parent_scp_path=train_scp, training=False, logger=None,
+        data_new = KaldiDataset('scp:' + new_path, parent_dataset_path=train_scp, training=False, logger=None,
                                 mean_subtraction=mean_sub, variance_normalization=var_norm)
     if gen_background:
         background_path = os.path.join(processed_data_dir, 'background_train_v4', 'background_data.scp')
-        data_background = KaldiDataset('scp:' + background_path, parent_scp_path=train_scp, training=False, logger=None,
+        data_background = KaldiDataset('scp:' + background_path, parent_dataset_path=train_scp, training=False, logger=None,
                                        mean_subtraction=mean_sub, variance_normalization=var_norm)
 
     train_embeddings_dir = os.path.join(run_dir, 'train_embeddings')

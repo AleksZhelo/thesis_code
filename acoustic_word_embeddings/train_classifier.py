@@ -8,7 +8,7 @@ from acoustic_word_embeddings.core.util.net_util import setup_training_run
 from acoustic_word_embeddings.core.gru_classifier import GRUClassifier
 from acoustic_word_embeddings.core.lstm_classifier import LSTMClassifier
 from base.common import get_dataset_paths
-from base.dataset import KaldiDataset
+from base.kaldi_dataset import KaldiDataset
 from conf import current_dataset
 
 
@@ -70,7 +70,7 @@ def __main():
     data_train = KaldiDataset('scp:' + train_path, logger=logger, noise_multiplier=noise_mult, noise_prob=noise_prob,
                               mean_subtraction=mean_sub, variance_normalization=var_norm,
                               supplement_rare_with_noisy=supplement_rare, supplement_seed=supplement_seed)
-    data_dev = KaldiDataset('scp:' + dev_path, parent_scp_path=train_path, training=False, logger=logger,
+    data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_path, training=False, logger=logger,
                             mean_subtraction=mean_sub, variance_normalization=var_norm)
 
     data_parallel = args.gpu_count > 1
