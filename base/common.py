@@ -6,7 +6,7 @@ import string
 from conf import processed_data_dir, res_dir
 
 
-def get_dataset_paths(dataset, fmt='scp'):
+def get_dataset_paths(dataset, fmt='lmdb'):
     """fmt values: scp, lmdb"""
     train_path = os.path.join(processed_data_dir, '{0}_train.{format}'.format(dataset, format=fmt))
     dev_path = os.path.join(processed_data_dir, '{0}_dev.{format}'.format(dataset, format=fmt))

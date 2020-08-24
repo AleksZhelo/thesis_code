@@ -50,7 +50,7 @@ def collect_csv_ratings(dataset_scp, include_missing=True):
     output_name = os.path.splitext(dataset_scp)[0] + '_ratings' + '_full' if include_missing else ''
     data_path = os.path.join(processed_data_dir, dataset_scp)
     # training set to True to avoid providing parent path
-    dataset = KaldiDataset('scp:' + data_path, training=True, logger=None)
+    dataset = KaldiDataset(data_path, training=True, logger=None)
 
     ratings = get_snodgrass_ratings_for_keys(dataset) if not include_missing \
         else get_snodgrass_ratings_for_patients(dataset)

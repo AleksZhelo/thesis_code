@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 
-from base.settings import Settings
 from acoustic_word_embeddings.nets.common import hidden2fc_input
 from acoustic_word_embeddings.nets.lstm_fc_base import LSTM_FC_base
+from base.settings import Settings
 
 
 class LSTMClassifier(LSTM_FC_base):

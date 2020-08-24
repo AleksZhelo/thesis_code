@@ -2,10 +2,10 @@ import numpy as np
 import torch
 
 from acoustic_word_embeddings.core.loss.embedding_loss import triplet_loss_offline
-from base import util
-from base.settings import Settings
 from acoustic_word_embeddings.nets.common import hidden2fc_input
 from acoustic_word_embeddings.nets.gru_fc_base import GRU_FC_base
+from base import util
+from base.settings import Settings
 
 
 class SiameseGRU(GRU_FC_base):

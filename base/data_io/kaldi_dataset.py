@@ -6,7 +6,7 @@ import kaldi_io
 import numpy as np
 
 from base.common import get_dataset_paths, snodgrass_key2patient, snodgrass_key2date, key2word
-from base.data_io.dataset import Dataset
+from base.data_io.dataset import Dataset, _print_patients
 from base.sound_util import frames2time
 from conf import current_dataset, processed_data_dir
 
@@ -23,23 +23,15 @@ class KaldiDataset(Dataset):
         return kaldi_io.read_mat_scp(self.data_path)
 
 
-def _print_patients(data_train, data_dev, data_test):
-    from base.common import snodgrass_key2patient
-    for ds in [data_train, data_dev, data_test]:
-        patients = np.unique([snodgrass_key2patient(ds.idx2key[i]) for i in range(ds.data.shape[0]) if
-                              ds.idx2source_dataset[i] == 'snodgrass'])
-        print(patients)
-
-
 def __main():
     start = time.time()
 
-    train_path, dev_path, test_path = get_dataset_paths(current_dataset)
-    data_train = KaldiDataset('scp:' + train_path, noise_multiplier=1.0, noise_prob=0.5,
+    train_path, dev_path, test_path = get_dataset_paths(current_dataset, fmt='scp')
+    data_train = KaldiDataset(train_path, noise_multiplier=1.0, noise_prob=0.5,
                               supplement_rare_with_noisy=False,
                               supplement_seed=112)
-    data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_path, training=False)
-    data_test = KaldiDataset('scp:' + test_path, parent_dataset_path=train_path, training=False)
+    data_dev = KaldiDataset(dev_path, parent_dataset_path=train_path, training=False)
+    data_test = KaldiDataset(test_path, parent_dataset_path=train_path, training=False)
 
     _print_patients(data_train, data_dev, data_test)
 
@@ -51,7 +43,7 @@ def __main():
 
 def __main_snodgrass_test():
     snodgrass_path = '/home/aleks/data/speech_processed/snodgrass_words_cleaned_v3/snodgrass_data_v3.scp'
-    data_snodgrass = KaldiDataset('scp:' + snodgrass_path)
+    data_snodgrass = KaldiDataset(snodgrass_path)
 
     patients = np.unique([snodgrass_key2patient(x) for x in data_snodgrass.idx2key])
     sessions = np.unique([snodgrass_key2date(x) for x in data_snodgrass.idx2key])
@@ -65,7 +57,7 @@ def __main_snodgrass_test():
 
 def __main_external_test():
     external_path = os.path.join(processed_data_dir, 'external_snodgrass_words.scp')
-    data_external = KaldiDataset('scp:' + external_path)
+    data_external = KaldiDataset(external_path)
 
     total_seconds_of_data = np.sum(frames2time(x.shape[0]) for x in data_external.data)
     print('Hours of data: {0:.3f}'.format(total_seconds_of_data / 60 / 60))
@@ -73,14 +65,14 @@ def __main_external_test():
 
 def __main_independent_test():
     swc_path = '/home/aleks/data/speech_processed/independent_test_v2/SWC_independent_test.scp'
-    data_swc = KaldiDataset('scp:' + swc_path)
+    data_swc = KaldiDataset(swc_path)
 
     print(data_swc.counts)
 
-    train_path, dev_path, test_path = get_dataset_paths('independent_cleaned_v3')
-    data_train = KaldiDataset('scp:' + train_path)
-    data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_path)
-    data_test = KaldiDataset('scp:' + test_path, parent_dataset_path=train_path)
+    train_path, dev_path, test_path = get_dataset_paths('independent_cleaned_v3', fmt='scp')
+    data_train = KaldiDataset(train_path)
+    data_dev = KaldiDataset(dev_path, parent_dataset_path=train_path)
+    data_test = KaldiDataset(test_path, parent_dataset_path=train_path)
 
     print(data_dev.counts)
 
@@ -108,16 +100,16 @@ def __dump_numpy_txt():
 
     start = time.time()
 
-    train_path, dev_path, test_path = get_dataset_paths(current_dataset)
-    data_train = KaldiDataset('scp:' + train_path, noise_multiplier=1.0, noise_prob=0.5,
+    train_path, dev_path, test_path = get_dataset_paths(current_dataset, fmt='scp')
+    data_train = KaldiDataset(train_path, noise_multiplier=1.0, noise_prob=0.5,
                               supplement_rare_with_noisy=False,
                               supplement_seed=112)
     dump_to_dir(data_train, current_dataset, 'train')
 
-    data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_path, training=False)
+    data_dev = KaldiDataset(dev_path, parent_dataset_path=train_path, training=False)
     dump_to_dir(data_dev, current_dataset, 'dev')
 
-    data_test = KaldiDataset('scp:' + test_path, parent_dataset_path=train_path, training=False)
+    data_test = KaldiDataset(test_path, parent_dataset_path=train_path, training=False)
     dump_to_dir(data_test, current_dataset, 'test')
 
     print('dump: {0}'.format(time.time() - start))
@@ -130,15 +122,15 @@ def __dump_lmdb():
     train_path, dev_path, test_path = get_dataset_paths(current_dataset, fmt='scp')
     train_path_lmdb, dev_path_lmdb, test_path_lmdb = get_dataset_paths(current_dataset, fmt='lmdb')
 
-    data_train = KaldiDataset('scp:' + train_path, noise_multiplier=1.0, noise_prob=0.5,
+    data_train = KaldiDataset(train_path, noise_multiplier=1.0, noise_prob=0.5,
                               supplement_rare_with_noisy=False,
                               supplement_seed=112)
     dataset2lmdb(data_train, train_path_lmdb)
 
-    data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_path, training=False)
+    data_dev = KaldiDataset(dev_path, parent_dataset_path=train_path, training=False)
     dataset2lmdb(data_dev, dev_path_lmdb)
 
-    data_test = KaldiDataset('scp:' + test_path, parent_dataset_path=train_path, training=False)
+    data_test = KaldiDataset(test_path, parent_dataset_path=train_path, training=False)
     dataset2lmdb(data_test, test_path_lmdb)
 
     print('dump to LMDB: {0}'.format(time.time() - start))

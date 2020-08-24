@@ -1,5 +1,4 @@
 import lmdb
-
 import numpy as np
 
 import base.data_io.proto.tensor_pb2 as tensor_pb2

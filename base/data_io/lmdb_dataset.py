@@ -3,8 +3,7 @@ import time
 import lmdb
 
 from base.common import get_dataset_paths
-from base.data_io.dataset import Dataset
-from base.data_io.kaldi_dataset import _print_patients
+from base.data_io.dataset import Dataset, _print_patients
 from base.data_io.proto import tensor_pb2, utils
 from conf import current_dataset
 

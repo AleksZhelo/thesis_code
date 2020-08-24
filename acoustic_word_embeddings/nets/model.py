@@ -1,7 +1,7 @@
 import torch
 
-from base import util
 from acoustic_word_embeddings.nets.common import torch_load_unwrapped
+from base import util
 
 
 class Model(torch.nn.Module):

@@ -7,11 +7,11 @@ import torch
 
 from acoustic_word_embeddings.core.average_precision import average_precision
 from acoustic_word_embeddings.core.loss.embedding_loss import margin_loss
-from acoustic_word_embeddings.core.util.net_util import setup_training_run, create_embedding_loss
 from acoustic_word_embeddings.core.siamese_gru import SiameseGRU
 from acoustic_word_embeddings.core.siamese_lstm import SiameseLSTM
+from acoustic_word_embeddings.core.util.net_util import setup_training_run, create_embedding_loss
 from base.common import get_dataset_paths
-from base.data_io.kaldi_dataset import KaldiDataset
+from base.data_io.dataset import get_dataset_class_for_path
 from conf import current_dataset
 
 
@@ -94,10 +94,12 @@ def __main():
     supplement_rare = getattr(config.general_training, 'supplement_rare_with_noisy', False)
     supplement_seed = getattr(config.general_training, 'supplement_seed', 112)
     train_path, dev_path, _ = get_dataset_paths(current_dataset)
-    data_train = KaldiDataset('scp:' + train_path, logger=logger, noise_multiplier=noise_mult, noise_prob=noise_prob,
+    # noinspection PyPep8Naming
+    DatasetClass = get_dataset_class_for_path(train_path, logger=logger)
+    data_train = DatasetClass(train_path, logger=logger, noise_multiplier=noise_mult, noise_prob=noise_prob,
                               mean_subtraction=mean_sub, variance_normalization=var_norm,
                               supplement_rare_with_noisy=supplement_rare, supplement_seed=supplement_seed)
-    data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_path, training=False, logger=logger,
+    data_dev = DatasetClass(dev_path, parent_dataset_path=train_path, training=False, logger=logger,
                             mean_subtraction=mean_sub, variance_normalization=var_norm)
 
     loss_fn = create_embedding_loss(config, len(data_train.word2id))

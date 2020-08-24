@@ -1,13 +1,13 @@
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 
-from acoustic_word_embeddings.core.util.common import load_embeddings
 from acoustic_word_embeddings.core.loss.embedding_loss import loss_name2class
+from acoustic_word_embeddings.core.util.common import load_embeddings
 from acoustic_word_embeddings.core.util.net_util import read_embedding_loss, load_net
 from acoustic_word_embeddings.gen_embeddings import get_or_generate_embeddings
 from acoustic_word_embeddings.train_classifier import process_classifier_epoch
 from base.common import get_dataset_paths
-from base.data_io.kaldi_dataset import KaldiDataset
+from base.data_io.dataset import get_dataset_class_for_path
 from conf import current_dataset
 
 
@@ -91,15 +91,17 @@ def do_calculate_accuracy(run_dir, epoch, is_classifier, dataset=None, partition
         if dataset is None:
             dataset = current_dataset
         train_path, dev_path, test_path = get_dataset_paths(dataset)
+        # noinspection PyPep8Naming
+        DatasetClass = get_dataset_class_for_path(train_path, logger=None)
 
         if partition == 'train':
-            dataset = KaldiDataset('scp:' + train_path, parent_dataset_path=train_scp, training=False, logger=None,
+            dataset = DatasetClass(train_path, parent_dataset_path=train_scp, training=False, logger=None,
                                    mean_subtraction=mean_sub, variance_normalization=var_norm)
         if partition == 'dev':
-            dataset = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_scp, training=False, logger=None,
+            dataset = DatasetClass(dev_path, parent_dataset_path=train_scp, training=False, logger=None,
                                    mean_subtraction=mean_sub, variance_normalization=var_norm)
         if partition == 'test':
-            dataset = KaldiDataset('scp:' + test_path, parent_dataset_path=train_scp, training=False, logger=None,
+            dataset = DatasetClass(test_path, parent_dataset_path=train_scp, training=False, logger=None,
                                    mean_subtraction=mean_sub, variance_normalization=var_norm)
 
         # TODO: no automatic detection for batch_first and data_parallel

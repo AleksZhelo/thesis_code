@@ -3,10 +3,10 @@ from abc import ABC
 import torch
 import torch.nn as nn
 
-from base.settings import Settings
 from acoustic_word_embeddings.nets.common import hidden2fc_input
-from acoustic_word_embeddings.nets.modules_experimental.custom_gru import CustomGRU, BiRNNMode
 from acoustic_word_embeddings.nets.model import Model
+from acoustic_word_embeddings.nets.modules_experimental.custom_gru import CustomGRU, BiRNNMode
+from base.settings import Settings
 
 
 # noinspection PyPep8Naming

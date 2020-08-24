@@ -133,8 +133,5 @@ def __main():
     group_analysis(net_rated_words, word2example_count_group, 6)
 
 
-
-
-
 if __name__ == '__main__':
     __main()

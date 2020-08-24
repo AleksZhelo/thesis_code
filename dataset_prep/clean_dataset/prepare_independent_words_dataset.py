@@ -100,10 +100,10 @@ def compose_test_from_non_validation_words(swc_path, dev_path, test_path):
 if __name__ == '__main__':
     # train_scp, dev_scp, test_scp = split_independent_words('independent_cleaned_v3', 'independent_test_v2',
     #                                                        'all_snodgrass_cleaned_v4')
-    # train_data = KaldiDataset('scp:' + train_scp)
+    # train_data = KaldiDataset(train_scp)
     # train_data.dump_derived_data()
 
-    train_path, dev_path, test_path = get_dataset_paths('independent_cleaned_v3')
+    train_path, dev_path, test_path = get_dataset_paths('independent_cleaned_v3', fmt='scp')
     swc_path = '/home/aleks/data/speech_processed/independent_test_v2/SWC_independent_test.scp'
 
     compose_test_from_non_validation_words(swc_path, dev_path, test_path)

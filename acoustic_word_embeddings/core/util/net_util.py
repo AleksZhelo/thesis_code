@@ -7,15 +7,15 @@ from shutil import copyfile
 
 import numpy as np
 
-from acoustic_word_embeddings.core.util.args_util import parse_training_args
-from acoustic_word_embeddings.core.loss.embedding_loss import DistanceBasedLoss
 from acoustic_word_embeddings.core.gru_classifier import GRUClassifier
+from acoustic_word_embeddings.core.loss.embedding_loss import DistanceBasedLoss
 from acoustic_word_embeddings.core.lstm_classifier import LSTMClassifier
 from acoustic_word_embeddings.core.siamese_gru import SiameseGRU
 from acoustic_word_embeddings.core.siamese_lstm import SiameseLSTM
+from acoustic_word_embeddings.core.util.args_util import parse_training_args
+from acoustic_word_embeddings.nets.common import torch_load_unwrapped
 from base import util
 from base.settings import Settings
-from acoustic_word_embeddings.nets.common import torch_load_unwrapped
 from base.util import create_logger
 from conf import awe_runs_dir
 

@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 
-from base.settings import Settings
 from acoustic_word_embeddings.nets.common import hidden2fc_input
 from acoustic_word_embeddings.nets.gru_fc_base import GRU_FC_base
+from base.settings import Settings
 
 
 class GRUClassifier(GRU_FC_base):

@@ -40,7 +40,7 @@ def split_snodgrass_dataset(source_sub_dir, snodgrass_file, same_split_as=None):
         patients_test = knapsack(patients_left, len(lines) / 4)[1]
         patients_dev = remove_all(patients_left, patients_test)
     else:
-        train_path, dev_path, test_path = get_dataset_paths(same_split_as)
+        train_path, dev_path, test_path = get_dataset_paths(same_split_as, fmt='scp')
         patients_train = scp2snodgrass_patients(train_path)
         patients_test = scp2snodgrass_patients(test_path)
         patients_dev = scp2snodgrass_patients(dev_path)
@@ -119,7 +119,7 @@ def __main_v5():
                              same_split_as='all_snodgrass_cleaned_v3')
 
     # Dump the training dataset mean and word2id for future use
-    train_data = KaldiDataset('scp:' + train_scp)
+    train_data = KaldiDataset(train_scp)
     train_data.dump_derived_data()
 
 

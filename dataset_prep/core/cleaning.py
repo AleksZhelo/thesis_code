@@ -1,7 +1,7 @@
 from base import util
 
 
-def  reject_by_duration_sec(duration_sec, dataset, key, logger=None, verbose=True):
+def reject_by_duration_sec(duration_sec, dataset, key, logger=None, verbose=True):
     if duration_sec < 0.200:
         if verbose:
             util.warn_or_print(logger,

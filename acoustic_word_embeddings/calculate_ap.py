@@ -2,12 +2,12 @@ import sys
 
 import numpy as np
 
-from acoustic_word_embeddings.core.util.args_util import parse_load_epoch_args
 from acoustic_word_embeddings.core.average_precision import average_precision
+from acoustic_word_embeddings.core.util.args_util import parse_load_epoch_args
 from acoustic_word_embeddings.core.util.net_util import load_net
 from acoustic_word_embeddings.gen_embeddings import get_siamese_embeddings, get_classifier_embeddings
 from base.common import get_dataset_paths
-from base.data_io.kaldi_dataset import KaldiDataset
+from base.data_io.dataset import get_dataset_class_for_path
 from conf import current_dataset
 
 
@@ -35,6 +35,8 @@ def do_calculate_ap(run_dir, epoch, dataset=None, partition='dev'):
         dataset = current_dataset
 
     train_path, dev_path, test_path = get_dataset_paths(dataset)
+    # noinspection PyPep8Naming
+    DatasetClass = get_dataset_class_for_path(train_path, logger=None)
 
     if len(checkpoints) == 0:
         print('No checkpoints found in {0} for run {1}'.format(checkpoint_dir, run_dir))
@@ -42,18 +44,18 @@ def do_calculate_ap(run_dir, epoch, dataset=None, partition='dev'):
         sys.exit(-1)
 
     if partition == 'train':
-        data_train = KaldiDataset('scp:' + train_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_train = DatasetClass(train_path, parent_dataset_path=train_scp, training=False, logger=None,
                                   mean_subtraction=mean_sub, variance_normalization=var_norm)
         return get_epoch_ap(net, config, checkpoints, loss, data_train, epoch, get_embeddings,
                             subsample_size=3000)
 
     if partition == 'dev':
-        data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_dev = DatasetClass(dev_path, parent_dataset_path=train_scp, training=False, logger=None,
                                 mean_subtraction=mean_sub, variance_normalization=var_norm)
         return get_epoch_ap(net, config, checkpoints, loss, data_dev, epoch, get_embeddings)
 
     if partition == 'test':
-        data_test = KaldiDataset('scp:' + test_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_test = DatasetClass(test_path, parent_dataset_path=train_scp, training=False, logger=None,
                                  mean_subtraction=mean_sub, variance_normalization=var_norm)
         return get_epoch_ap(net, config, checkpoints, loss, data_test, epoch, get_embeddings)
 
@@ -85,6 +87,8 @@ def __main(run_dir, dataset=None, for_epochs=None, gen_train=False, gen_dev=True
         dataset = current_dataset
 
     train_path, dev_path, test_path = get_dataset_paths(dataset)
+    # noinspection PyPep8Naming
+    DatasetClass = get_dataset_class_for_path(train_path, logger=None)
 
     if len(checkpoints) == 0:
         print('No checkpoints found in {0} for run {1}'.format(checkpoint_dir, run_dir))
@@ -95,18 +99,18 @@ def __main(run_dir, dataset=None, for_epochs=None, gen_train=False, gen_dev=True
         for_epochs = sorted(list(checkpoints.keys()))
 
     if gen_train:
-        data_train = KaldiDataset('scp:' + train_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_train = DatasetClass(train_path, parent_dataset_path=train_scp, training=False, logger=None,
                                   mean_subtraction=mean_sub, variance_normalization=var_norm)
         _print_ap_per_epoch(net, config, checkpoints, loss, data_train, 'train', for_epochs, get_embeddings,
                             subsample_size=3000)
 
     if gen_dev:
-        data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_dev = DatasetClass(dev_path, parent_dataset_path=train_scp, training=False, logger=None,
                                 mean_subtraction=mean_sub, variance_normalization=var_norm)
         _print_ap_per_epoch(net, config, checkpoints, loss, data_dev, 'dev', for_epochs, get_embeddings)
 
     if gen_test:
-        data_test = KaldiDataset('scp:' + test_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_test = DatasetClass(test_path, parent_dataset_path=train_scp, training=False, logger=None,
                                  mean_subtraction=mean_sub, variance_normalization=var_norm)
         _print_ap_per_epoch(net, config, checkpoints, loss, data_test, 'test', for_epochs, get_embeddings)
 

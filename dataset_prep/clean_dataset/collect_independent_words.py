@@ -72,7 +72,7 @@ def get_dataset_word_counts(scp_path):
     out_path = os.path.splitext(os.path.basename(scp_path))[0] + '_word_counts.pckl'
 
     if not os.path.exists(out_path):
-        dataset = KaldiDataset('scp:' + scp_path)
+        dataset = KaldiDataset(scp_path)
         with open(out_path, 'wb') as f:
             pickle.dump(dataset.counts, f)
         return dataset.counts
@@ -91,7 +91,7 @@ def select_independent_words():
     counts_per_emu_db = get_emu_word_counts()
     counts_emu_total = collapse_nested_dict(counts_per_emu_db)
     counts_swc = get_swc_word_counts()
-    train_path, dev_path, _ = get_dataset_paths('all_snodgrass_cleaned_v5')
+    train_path, dev_path, _ = get_dataset_paths('all_snodgrass_cleaned_v5', fmt='scp')
     counts_train = get_dataset_word_counts(train_path)
     counts_dev = get_dataset_word_counts(dev_path)
 

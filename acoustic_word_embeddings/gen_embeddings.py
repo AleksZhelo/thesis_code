@@ -8,10 +8,10 @@ import torch
 from acoustic_word_embeddings.core.util.args_util import parse_gen_args
 from acoustic_word_embeddings.core.util.common import embeddings_dir2dict
 from acoustic_word_embeddings.core.util.net_util import load_net
+from acoustic_word_embeddings.nets.common import torch_load_unwrapped
 from base import util
 from base.common import get_dataset_paths
-from base.data_io.kaldi_dataset import KaldiDataset
-from acoustic_word_embeddings.nets.common import torch_load_unwrapped
+from base.data_io.dataset import get_dataset_class_for_path
 from conf import current_dataset, new_path, processed_data_dir
 
 
@@ -98,22 +98,24 @@ def generate_embeddings(run_dir, dataset=None, gen_train=False, gen_dev=False, g
     if dataset is None:
         dataset = current_dataset
     train_path, dev_path, test_path = get_dataset_paths(dataset)
+    # noinspection PyPep8Naming
+    DatasetClass = get_dataset_class_for_path(train_path, logger=None)
 
     if gen_train:
-        data_train = KaldiDataset('scp:' + train_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_train = DatasetClass(train_path, parent_dataset_path=train_scp, training=False, logger=None,
                                   mean_subtraction=mean_sub, variance_normalization=var_norm)
     if gen_dev:
-        data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_dev = DatasetClass(dev_path, parent_dataset_path=train_scp, training=False, logger=None,
                                 mean_subtraction=mean_sub, variance_normalization=var_norm)
     if gen_test:
-        data_test = KaldiDataset('scp:' + test_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_test = DatasetClass(test_path, parent_dataset_path=train_scp, training=False, logger=None,
                                  mean_subtraction=mean_sub, variance_normalization=var_norm)
     if gen_new:
-        data_new = KaldiDataset('scp:' + new_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_new = DatasetClass(new_path, parent_dataset_path=train_scp, training=False, logger=None,
                                 mean_subtraction=mean_sub, variance_normalization=var_norm)
     if gen_background:
         background_path = os.path.join(processed_data_dir, 'background_train_v4', 'background_data.scp')
-        data_background = KaldiDataset('scp:' + background_path, parent_dataset_path=train_scp, training=False, logger=None,
+        data_background = DatasetClass(background_path, parent_dataset_path=train_scp, training=False, logger=None,
                                        mean_subtraction=mean_sub, variance_normalization=var_norm)
 
     train_embeddings_dir = os.path.join(run_dir, 'train_embeddings')

@@ -3,6 +3,7 @@ import os
 import pickle
 import sys
 from itertools import islice, cycle
+from typing import Type
 
 import numpy as np
 
@@ -15,7 +16,7 @@ class Dataset(metaclass=abc.ABCMeta):
     def __init__(self, data_path, parent_dataset_path=None, training=True, logger=None, variance_normalization=False,
                  noise_multiplier=0, noise_prob=1, mean_subtraction=False, supplement_rare_with_noisy=False,
                  supplement_seed=112):
-        self.data_path = data_path if not data_path.startswith('scp:') else data_path[4:]
+        self.data_path = data_path
         self.word2idxs = {}
         self.idx2word = []
         self.idx2source_dataset = []
@@ -357,3 +358,31 @@ class Dataset(metaclass=abc.ABCMeta):
     def _raw_data_iterator(self):
         """Must produce (key, features) pairs."""
         return
+
+
+def _print_patients(data_train, data_dev, data_test):
+    from base.common import snodgrass_key2patient
+    for ds in [data_train, data_dev, data_test]:
+        patients = np.unique([snodgrass_key2patient(ds.idx2key[i]) for i in range(ds.data.shape[0]) if
+                              ds.idx2source_dataset[i] == 'snodgrass'])
+        print(patients)
+
+
+def get_dataset_class_for_format(fmt, logger=None) -> Type[Dataset]:
+    if fmt == 'scp':
+        from base.data_io.kaldi_dataset import KaldiDataset
+        util.warn_or_print(logger, 'Selecting KaldiDataset for data handling')
+        return KaldiDataset
+    elif fmt == 'lmdb':
+        from base.data_io.lmdb_dataset import LMDBDataset
+        util.warn_or_print(logger, 'Selecting LMDBDataset for data handling')
+        return LMDBDataset
+    else:
+        msg = 'Unsupported data format: {0}'.format(fmt)
+        util.warn_or_print(logger, msg)
+        raise RuntimeError(msg)
+
+
+def get_dataset_class_for_path(dataset_path, logger) -> Type[Dataset]:
+    # get extension, remove leading dot, and pass as the format name
+    return get_dataset_class_for_format(os.path.splitext(dataset_path)[1][1:], logger)
