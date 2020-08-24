@@ -8,7 +8,7 @@ from rpy2 import robjects
 from rpy2.robjects import pandas2ri
 
 from base.common import load_snodgrass_words, get_dataset_paths
-from base.kaldi_dataset import KaldiDataset
+from base.data_io.kaldi_dataset import KaldiDataset
 from base.util import load_pickled, collapse_nested_dict
 from conf import raw_data_dir
 from dataset_prep.SWC import aligned_words_file, collect_aligned_words

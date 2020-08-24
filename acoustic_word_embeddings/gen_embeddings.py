@@ -10,7 +10,7 @@ from acoustic_word_embeddings.core.util.common import embeddings_dir2dict
 from acoustic_word_embeddings.core.util.net_util import load_net
 from base import util
 from base.common import get_dataset_paths
-from base.kaldi_dataset import KaldiDataset
+from base.data_io.kaldi_dataset import KaldiDataset
 from acoustic_word_embeddings.nets.common import torch_load_unwrapped
 from conf import current_dataset, new_path, processed_data_dir
 

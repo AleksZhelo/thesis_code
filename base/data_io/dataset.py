@@ -67,6 +67,8 @@ class Dataset(metaclass=abc.ABCMeta):
             util.warn_or_print(logger, 'No mean subtraction')
             self.data = np.array([segment.astype(np.float32) for segment in self.data])
 
+        # TODO: sort keys before doing anything else? (for identical behaviour between Kaldi and LMDB-exported datasets)
+
         self.noisy = np.zeros(len(self.data), dtype=bool)
         if supplement_rare_with_noisy and training:
             state_before = np.random.get_state()

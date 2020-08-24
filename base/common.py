@@ -6,10 +6,11 @@ import string
 from conf import processed_data_dir, res_dir
 
 
-def get_dataset_paths(dataset):
-    train_path = os.path.join(processed_data_dir, '{0}_train.scp'.format(dataset))
-    dev_path = os.path.join(processed_data_dir, '{0}_dev.scp'.format(dataset))
-    test_path = os.path.join(processed_data_dir, '{0}_test.scp'.format(dataset))
+def get_dataset_paths(dataset, fmt='scp'):
+    """fmt values: scp, lmdb"""
+    train_path = os.path.join(processed_data_dir, '{0}_train.{format}'.format(dataset, format=fmt))
+    dev_path = os.path.join(processed_data_dir, '{0}_dev.{format}'.format(dataset, format=fmt))
+    test_path = os.path.join(processed_data_dir, '{0}_test.{format}'.format(dataset, format=fmt))
 
     return train_path, dev_path, test_path
 

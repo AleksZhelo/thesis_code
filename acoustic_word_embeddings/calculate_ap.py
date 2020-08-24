@@ -7,7 +7,7 @@ from acoustic_word_embeddings.core.average_precision import average_precision
 from acoustic_word_embeddings.core.util.net_util import load_net
 from acoustic_word_embeddings.gen_embeddings import get_siamese_embeddings, get_classifier_embeddings
 from base.common import get_dataset_paths
-from base.kaldi_dataset import KaldiDataset
+from base.data_io.kaldi_dataset import KaldiDataset
 from conf import current_dataset
 
 

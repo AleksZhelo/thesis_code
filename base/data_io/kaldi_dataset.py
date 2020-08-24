@@ -6,7 +6,7 @@ import kaldi_io
 import numpy as np
 
 from base.common import get_dataset_paths, snodgrass_key2patient, snodgrass_key2date, key2word
-from base.dataset import Dataset
+from base.data_io.dataset import Dataset
 from base.sound_util import frames2time
 from conf import current_dataset, processed_data_dir
 
@@ -113,6 +113,7 @@ def __dump_numpy_txt():
                               supplement_rare_with_noisy=False,
                               supplement_seed=112)
     dump_to_dir(data_train, current_dataset, 'train')
+
     data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_path, training=False)
     dump_to_dir(data_dev, current_dataset, 'dev')
 
@@ -122,9 +123,31 @@ def __dump_numpy_txt():
     print('dump: {0}'.format(time.time() - start))
 
 
+def __dump_lmdb():
+    from base.data_io.dataset2lmdb import dataset2lmdb
+    start = time.time()
+
+    train_path, dev_path, test_path = get_dataset_paths(current_dataset, fmt='scp')
+    train_path_lmdb, dev_path_lmdb, test_path_lmdb = get_dataset_paths(current_dataset, fmt='lmdb')
+
+    data_train = KaldiDataset('scp:' + train_path, noise_multiplier=1.0, noise_prob=0.5,
+                              supplement_rare_with_noisy=False,
+                              supplement_seed=112)
+    dataset2lmdb(data_train, train_path_lmdb)
+
+    data_dev = KaldiDataset('scp:' + dev_path, parent_dataset_path=train_path, training=False)
+    dataset2lmdb(data_dev, dev_path_lmdb)
+
+    data_test = KaldiDataset('scp:' + test_path, parent_dataset_path=train_path, training=False)
+    dataset2lmdb(data_test, test_path_lmdb)
+
+    print('dump to LMDB: {0}'.format(time.time() - start))
+
+
 if __name__ == '__main__':
-    __main()
+    # __main()
     # __main_snodgrass_test()
     # __main_external_test()
     # __main_independent_test()
-    # __dump()
+    # __dump_numpy_txt()
+    __dump_lmdb()
